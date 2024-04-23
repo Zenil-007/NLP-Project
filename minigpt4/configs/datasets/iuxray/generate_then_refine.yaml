@@ -1,0 +1,6 @@
+datasets:
+  mimic_generate_then_refine:
+    data_type: images
+    build_info:
+      storage: /path/to/iuxray
+      unlabeled_annotation_path: /path/to/pubmed

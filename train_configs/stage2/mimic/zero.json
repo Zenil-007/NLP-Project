@@ -1,0 +1,15 @@
+{
+    "zero_optimization": {
+        "stage": 1,
+        "reduce_bucket_size": 5e8
+    },
+    "train_batch_size": 12,
+    "scheduler": {
+        "type": "WarmupLR",
+        "params": {
+            "warmup_min_lr": 1e-6,
+            "warmup_max_lr": 1e-5,
+            "warmup_num_steps": 200
+        }
+    }
+}

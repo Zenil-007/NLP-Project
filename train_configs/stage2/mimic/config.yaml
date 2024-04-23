@@ -1,0 +1,71 @@
+model:
+  arch: mini_gpt4
+  model_type: pretrain_vicuna
+  freeze_vit: True
+  freeze_qformer: True
+  max_txt_len: 100
+  end_sym: "###"
+  generation_prompt_path: "/path/to/generation/prompts"
+  refinement_prompt_path: "/path/to/refinement/prompts"
+  prompt_template: '###Human: {} ###Assistant: '
+  ckpt: '/path/to/linear'
+
+  use_contrastive_loss: True
+  use_refinement_loss: True
+  triplet_margin: 0.5
+  triplet_weight: 1.0
+  refinement_loss_weight: 1.0
+
+  # lora configuartion
+  use_lora: True
+  lora_rank: 32
+  lora_alpha: 32
+  lora_dropout: 0.1
+
+  # ZeRO optimizer configuration
+  use_zero_optimizer: True
+  deepspeed_config: "train_configs/stage2/zero.json"
+
+datasets:
+  mimic_generate_then_refine:
+    vis_processor:
+      train:
+        name: "blip2_image_train"
+        image_size: 224
+    text_processor:
+      train:
+        name: "blip_caption"
+
+run:
+  task: mimic_generate_then_refine
+  # optimizer
+  lr_sched: "linear_warmup_cosine_lr"
+  init_lr: 3e-5
+  min_lr: 1e-5
+  warmup_lr: 1e-6
+
+  weight_decay: 0.05
+  max_epoch: 10
+  iters_per_epoch: 1000 # 200
+  batch_size_train: 1 # total batch size, not per GPU
+  batch_size_eval: 1
+  num_workers: 4
+  warmup_steps: 200
+
+  seed: 42
+  output_dir: "/path/to/output"
+
+  amp: True
+  resume_ckpt_path: null
+
+  evaluate: False 
+  train_splits: ["train"]
+
+  device: "cuda"
+  world_size: 2
+  dist_url: "env://"
+  distributed: True
+
+  # ZeRO optimizer configuration
+  use_zero_optimizer: True
+  deepspeed_config: "train_configs/stage2/zero.json"

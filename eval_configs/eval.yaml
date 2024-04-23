@@ -1,0 +1,30 @@
+model:
+  arch: mini_gpt4
+  model_type: pretrain_vicuna
+  freeze_vit: True
+  freeze_qformer: True
+  max_txt_len: 100
+  end_sym: "###"
+  low_resource: True
+  prompt_path: "/path/to/prompts"
+  prompt_template: '###Human: {} ###Assistant: '
+  ckpt: '/path/to/linear'
+
+  # lora configuartion
+  use_lora: True
+  lora_rank: 8
+  lora_alpha: 32
+  lora_dropout: 0.1
+
+datasets:
+  mimic_generate_then_refine:
+    vis_processor:
+      train:
+        name: "blip2_image_eval"
+        image_size: 224
+    text_processor:
+      train:
+        name: "blip_caption"
+
+run:
+  task: image_text_pretrain
